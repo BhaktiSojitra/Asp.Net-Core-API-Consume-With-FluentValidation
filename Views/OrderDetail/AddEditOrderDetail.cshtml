@@ -1,0 +1,131 @@
+﻿@model API_Consume.Models.OrderDetailModel
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@((bool)TempData["IsEditMode"] ? "Edit Order Detail" : "Add New Order Detail")</h5>
+        <form asp-controller="OrderDetail" asp-action="OrderDetailSave" method="post">
+            <div class="row mb-3">
+                <input type="hidden" asp-for="OrderDetailID" />
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>OrderID</label>
+                <div class="col-sm-10">
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (readonly) -->
+                        <select class="form-select" asp-for="OrderID" asp-items="@(new SelectList(ViewBag.OrderList, "OrderID", "OrderNumber"))" readonly>
+                            <option value="" selected>Select Order ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="OrderID" asp-items="@(new SelectList(ViewBag.OrderList, "OrderID", "OrderNumber"))">
+                            <option value="" selected>Select Order ID</option>
+                        </select>
+                    }
+                    <span asp-validation-for="OrderID" class="text-danger"></span>
+                </div> 
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>ProductID</label>
+                <div class="col-sm-10">
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (readonly) -->
+                        <select class="form-select" asp-for="ProductID" asp-items="@(new SelectList(ViewBag.ProductList, "ProductID", "ProductName"))" readonly>
+                            <option value="" selected>Select Product ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="ProductID" asp-items="@(new SelectList(ViewBag.ProductList, "ProductID", "ProductName"))">
+                            <option value="" selected>Select Product ID</option>
+                        </select>
+                    }
+                    <span asp-validation-for="ProductID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Quantity</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="Quantity">
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Amount</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="Amount">
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Total Amount</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="TotalAmount">
+                    <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>UserID</label>
+                <div class="col-sm-10">
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (readonly) -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))" readonly>
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    <span asp-validation-for="UserID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-success" id="btnSubmit">
+                        @((bool)TempData["IsEditMode"] ? "Edit" : "Add")
+                    </button>
+                    <a class="btn btn-danger" asp-controller="OrderDetail" asp-action="GetAll">Back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var isEditMode = "@((bool)TempData["IsEditMode"])";
+        var successMessage = "@TempData["SuccessMessage"]";
+
+        // If it's Add mode and there's a success message, reset the form
+        if (isEditMode == "False" && successMessage != "") {
+            document.querySelector("form").reset(); // Clear form only after successful Add operation
+        }
+
+        var form = document.querySelector("form");
+        var button = form.querySelector("button[type='submit']");
+
+        // Confirmation prompt before submitting the form
+        button.addEventListener("click", function (event) {
+            var message = isEditMode == "True" ? "Are you sure you want to edit this data?" : "Are you sure you want to add this data?";
+            if (!confirm(message)) {
+                event.preventDefault(); // Cancel form submission if not confirmed
+            }
+        });
+    });
+</script>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<API_Consume.Models.ProductModel>
+
+<div>
+    <h2>Product Table</h2>
+</div>
+
+<div class="d-flex justify-content-end mb-2">
+    <a class="btn btn-primary" asp-controller="Product" asp-action="AddEditProduct">Add New Product</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">ProductID</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Product Price</th>
+            <th scope="col">Product Code</th>
+            <th scope="col">Description</th>
+            <th scope="col">UserID</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.ProductID</td>
+                <td>@product.ProductName</td>
+                <td>@product.ProductPrice</td>
+                <td>@product.ProductCode</td>
+                <td>@product.Description</td>
+                <td>@product.UserID</td>
+                <td>
+                    <a class="btn btn-success" asp-controller="Product" asp-action="AddEditProduct" asp-route-ProductID="@product.ProductID">Edit</a>
+                    <a class="btn btn-danger" asp-controller="Product" asp-action="Delete" asp-route-ProductID="@product.ProductID" onclick="return confirmDelete()">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this product?');
+        }
+    </script>
+}

@@ -1,0 +1,147 @@
+﻿@model API_Consume.Models.CustomerModel
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@((bool)TempData["IsEditMode"] ? "Edit Customer" : "Add New Customer")</h5>
+        <form asp-controller="Customer" asp-action="CustomerSave" method="post">
+            <div class="row mb-3">
+                <input type="hidden" asp-for="CustomerID" />
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Customer Name</label>
+                <div class="col-sm-10">
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <input type="text" class="form-control" asp-for="CustomerName" readonly>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" asp-for="CustomerName">
+                    }
+                    <span asp-validation-for="CustomerName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Home Address</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" asp-for="HomeAddress"></textarea>
+                    <span asp-validation-for="HomeAddress" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" asp-for="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Mobile No</label>
+                <div class="col-sm-10">
+                    <input type="tel" class="form-control" asp-for="MobileNo">
+                    <span asp-validation-for="MobileNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>GST No</label>
+                <div class="col-sm-10">
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <input type="text" class="form-control" asp-for="GSTNo" readonly>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" asp-for="GSTNo">
+                    }
+                    <span asp-validation-for="GSTNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>City Name</label>
+                <div class="col-sm-10">
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <input type="text" class="form-control" asp-for="CityName" readonly>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" asp-for="CityName">
+                    }
+                    <span asp-validation-for="CityName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Pin Code</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="PinCode">
+                    <span asp-validation-for="PinCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Net Amount</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="NetAmount">
+                    <span asp-validation-for="NetAmount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>UserID</label>
+                <div class="col-sm-10">
+                    @if ((bool)TempData["IsEditMode"])
+                    {
+                        <!-- Dropdown in edit mode (readonly) -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))" readonly>
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    <span asp-validation-for="UserID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-success">
+                        @((bool)TempData["IsEditMode"] ? "Edit" : "Add")
+                    </button>
+                    <a class="btn btn-danger" asp-controller="Customer" asp-action="GetAll">Back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var isEditMode = "@((bool)TempData["IsEditMode"])";
+        var successMessage = "@TempData["SuccessMessage"]";
+
+        // If it's Add mode and there's a success message, reset the form
+        if (isEditMode == "False" && successMessage != "") {
+            document.querySelector("form").reset(); // Clear form only after successful Add operation
+        }
+
+        var form = document.querySelector("form");
+        var button = form.querySelector("button[type='submit']");
+
+        // Confirmation prompt before submitting the form
+        button.addEventListener("click", function (event) {
+            var message = isEditMode == "True" ? "Are you sure you want to edit this data?" : "Are you sure you want to add this data?";
+            if (!confirm(message)) {
+                event.preventDefault(); // Cancel form submission if not confirmed
+            }
+        });
+    });
+</script>
