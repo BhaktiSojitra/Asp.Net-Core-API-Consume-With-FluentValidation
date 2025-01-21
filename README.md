@@ -15,3 +15,6 @@ Key Features
           Data Annotation: Triggers first to show required field messages.
           FluentValidation: Applies rules for specific fields after basic validation.
       => For fields with default values (0), Data Annotations ensure 0 is treated as invalid and trigger appropriate error messages.
+
+For more information about using FluentValidation in MVC architecture, visit this website
+https://dotnettutorials.net/lesson/fluent-api-in-asp-net-core-mvc/
