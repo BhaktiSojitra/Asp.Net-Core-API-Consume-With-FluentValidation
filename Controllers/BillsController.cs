@@ -94,7 +94,6 @@ namespace API_Consume.Controllers
             BillsModel Bills = new BillsModel();
             if (BillID != null)
             {
-                TempData["IsEditMode"] = true;
                 HttpResponseMessage response = await _httpClient.GetAsync
                 ($"{_httpClient.BaseAddress}/Bills/GetBillByID/{BillID}");
                 if (response.IsSuccessStatusCode)
@@ -104,10 +103,6 @@ namespace API_Consume.Controllers
                     var dataOfObject = jsonObject.data;
                     Bills = JsonConvert.DeserializeObject<BillsModel>(dataOfObject.ToString());
                 }
-            }
-            else
-            {
-                TempData["IsEditMode"] = false;
             }
             TempData.Keep("IsEditMode");
             return View("AddEditBills", Bills);
