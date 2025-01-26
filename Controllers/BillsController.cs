@@ -104,7 +104,6 @@ namespace API_Consume.Controllers
                     Bills = JsonConvert.DeserializeObject<BillsModel>(dataOfObject.ToString());
                 }
             }
-            TempData.Keep("IsEditMode");
             return View("AddEditBills", Bills);
         }
         #endregion
