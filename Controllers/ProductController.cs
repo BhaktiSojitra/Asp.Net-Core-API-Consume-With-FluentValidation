@@ -88,7 +88,6 @@ namespace API_Consume.Controllers
                     product = JsonConvert.DeserializeObject<ProductModel>(dataOfObject.ToString());
                 }
             }
-            TempData.Keep("IsEditMode");
             return View("AddEditProduct", product);
         }
         #endregion
