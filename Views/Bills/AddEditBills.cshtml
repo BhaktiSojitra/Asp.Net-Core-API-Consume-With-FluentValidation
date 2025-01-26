@@ -1,0 +1,119 @@
+﻿@model API_Consume.Models.BillsModel
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@((Model.BillID == null) ? "Add New Bill" : "Edit Bill")</h5>
+        <form asp-controller="Bills" asp-action="BillsSave" method="post">
+            <div class="row mb-3">
+                <input type="hidden" asp-for="BillID" />
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Bill Number</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="BillNumber">
+                    <span asp-validation-for="BillNumber" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Bill Date</label>
+                <div class="col-sm-10">
+                    <input type="datetime-local" class="form-control" asp-for="BillDate" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+                    <span asp-validation-for="BillDate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>OrderID</label>
+                <div class="col-sm-10">
+                    @if (@Model.BillID == null)
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="OrderID" asp-items="@(new SelectList(ViewBag.OrderList, "OrderID", "OrderNumber"))">
+                            <option value="" selected>Select Order ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in edit mode (read only) -->
+                        <select class="form-select" asp-for="OrderID" asp-items="@(new SelectList(ViewBag.OrderList, "OrderID", "OrderNumber"))" readonly>
+                            <option value="" selected>Select Order ID</option>
+                        </select>
+                    }
+                    <span asp-validation-for="OrderID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Total Amount</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="TotalAmount">
+                    <span asp-validation-for="TotalAmount" class="text-danger"></span>
+                </div>
+            </div>
+             <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Discount</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="Discount">
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Net Amount</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="NetAmount">
+                    <span asp-validation-for="NetAmount" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>UserID</label>
+                <div class="col-sm-10">
+                    @if (@Model.BillID == null)
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in edit mode (read only) -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))" readonly>
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    <span asp-validation-for="UserID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-success">
+                        @(Model.BillID == null ? "Add" : "Edit")
+                    </button>
+                    <a class="btn btn-danger" asp-controller="Bills" asp-action="GetAll">Back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get form and submit button
+        var form = document.querySelector("form");
+        var button = form.querySelector("button[type='submit']");
+
+        // Confirmation prompt before submitting the form
+        button.addEventListener("click", function (event) {
+            var message = "@(Model.BillID == null ? "Are you sure you want to add this data?" : "Are you sure you want to edit this data?")";
+
+            if (!confirm(message)) {
+                event.preventDefault(); // Cancel form submission if user selects "Cancel"
+            }
+        });
+    });
+</script>

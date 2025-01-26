@@ -1,0 +1,94 @@
+﻿@model API_Consume.Models.ProductModel
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@((Model.ProductID == null) ? "Add New Product" : "Edit Product")</h5>
+        @*<h5>@((bool)TempData["IsEditMode"])</h5>@**@
+
+        <form asp-controller="Product" asp-action="ProductSave" method="post">
+            <div class="row mb-3">
+                <input type="hidden" asp-for="ProductID" />
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Product Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="ProductName">
+                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Product Price</label>
+                <div class="col-sm-10">
+                    <input type="number" class="form-control" asp-for="ProductPrice">
+                    <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>Product Code</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="ProductCode">
+                    <span asp-validation-for="ProductCode" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="inputText" class="col-sm-2 col-form-label"><span class="text-danger">*</span>Description</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" asp-for="Description">
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"><span class="text-danger">*</span>UserID</label>
+                <div class="col-sm-10">
+                    @if (@Model.ProductID == null)
+                    {
+                        <!-- Dropdown in insert mode -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))">
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <!-- Dropdown in edit mode (read only) -->
+                        <select class="form-select" asp-for="UserID" asp-items="@(new SelectList(ViewBag.UserList, "UserID", "UserName"))" readonly>
+                            <option value="" selected>Select User ID</option>
+                        </select>
+                    }
+                    <span asp-validation-for="UserID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-success" id="btnSubmit">
+                        @(Model.ProductID == null ? "Add" : "Edit")
+                    </button>
+                    <a class="btn btn-danger" asp-controller="Product" asp-action="GetAll">Back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get form and submit button
+        var form = document.querySelector("form");
+        var button = form.querySelector("button[type='submit']");
+
+        // Confirmation prompt before submitting the form
+        button.addEventListener("click", function (event) {
+            var message = "@(Model.ProductID == null ? "Are you sure you want to add this data?" : "Are you sure you want to edit this data?")";
+
+            if (!confirm(message)) {
+                event.preventDefault(); // Cancel form submission if user selects "Cancel"
+            }
+        });
+    });
+</script>

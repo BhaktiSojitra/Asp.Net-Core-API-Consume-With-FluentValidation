@@ -1,0 +1,66 @@
+﻿@model IEnumerable<API_Consume.Models.OrderDetailModel>
+
+<div>
+    <h2>Order Detail Table</h2>
+</div>
+
+<div class="d-flex justify-content-end mb-2">
+    <a class="btn btn-primary" asp-controller="OrderDetail" asp-action="AddEditOrderDetail">Add New Order Detail</a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">OrderDetailID</th>
+            <th scope="col">OrderID</th>
+            <th scope="col">ProductID</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Total Amount</th>
+            <th scope="col">UserID</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderDetail in Model)
+        {
+            <tr>
+                <td>@orderDetail.OrderDetailID</td>
+                <td>@orderDetail.OrderID</td>
+                <td>@orderDetail.ProductID</td>
+                <td>@orderDetail.Quantity</td>
+                <td>@orderDetail.Amount</td>
+                <td>@orderDetail.TotalAmount</td>
+                <td>@orderDetail.UserID</td>
+                <td>
+                    <a class="btn btn-success" asp-controller="OrderDetail" asp-action="AddEditOrderDetail" asp-route-OrderDetailID="@orderDetail.OrderDetailID">Edit</a>
+                    <a class="btn btn-danger" asp-controller="OrderDetail" asp-action="Delete" asp-route-OrderDetailID="@orderDetail.OrderDetailID" onclick="return confirmDelete()">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete this order detail?');
+        }
+    </script>
+}
