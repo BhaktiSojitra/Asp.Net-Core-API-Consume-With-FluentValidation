@@ -94,7 +94,6 @@ namespace API_Consume.Controllers
             OrderModel order = new OrderModel();
             if (OrderID != null)
             {
-                TempData["IsEditMode"] = true;
                 HttpResponseMessage response = await _httpClient.GetAsync
                 ($"{_httpClient.BaseAddress}/Order/GetOrderByID/{OrderID}");
                 if (response.IsSuccessStatusCode)
@@ -104,10 +103,6 @@ namespace API_Consume.Controllers
                     var dataOfObject = jsonObject.data;
                     order = JsonConvert.DeserializeObject<OrderModel>(dataOfObject.ToString());
                 }
-            }
-            else
-            {
-                TempData["IsEditMode"] = false;
             }
             TempData.Keep("IsEditMode");
             return View("AddEditOrder", order);
