@@ -74,7 +74,6 @@ namespace API_Consume.Controllers
                     user = JsonConvert.DeserializeObject<UserModel>(dataOfObject.ToString());
                 }
             }
-            TempData.Keep("IsEditMode");
             return View("AddEditUser", user);
         }
         #endregion
