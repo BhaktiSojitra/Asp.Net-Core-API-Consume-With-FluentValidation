@@ -78,7 +78,6 @@ namespace API_Consume.Controllers
             ProductModel product = new ProductModel();
             if (ProductID != null)
             {
-                TempData["IsEditMode"] = true;
                 HttpResponseMessage response = await _httpClient.GetAsync
                 ($"{_httpClient.BaseAddress}/Product/GetProductByID/{ProductID}");
                 if (response.IsSuccessStatusCode)
@@ -88,10 +87,6 @@ namespace API_Consume.Controllers
                     var dataOfObject = jsonObject.data;
                     product = JsonConvert.DeserializeObject<ProductModel>(dataOfObject.ToString());
                 }
-            }
-            else
-            {
-                TempData["IsEditMode"] = false;
             }
             TempData.Keep("IsEditMode");
             return View("AddEditProduct", product);
