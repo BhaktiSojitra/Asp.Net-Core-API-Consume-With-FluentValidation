@@ -120,7 +120,6 @@ namespace API_Consume.Controllers
                     orderDetail = JsonConvert.DeserializeObject<OrderDetailModel>(dataOfObject.ToString());
                 }
             }
-            TempData.Keep("IsEditMode");
             return View("AddEditOrderDetail", orderDetail);
         }
         #endregion
