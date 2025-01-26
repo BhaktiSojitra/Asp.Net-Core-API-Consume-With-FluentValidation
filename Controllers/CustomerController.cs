@@ -78,7 +78,6 @@ namespace API_Consume.Controllers
             CustomerModel customer = new CustomerModel();
             if (CustomerID != null)
             {
-                TempData["IsEditMode"] = true;
                 HttpResponseMessage response = await _httpClient.GetAsync
                 ($"{_httpClient.BaseAddress}/Customer/GetCustomerByID/{CustomerID}");
                 if (response.IsSuccessStatusCode)
@@ -88,10 +87,6 @@ namespace API_Consume.Controllers
                     var dataOfObject = jsonObject.data;
                     customer = JsonConvert.DeserializeObject<CustomerModel>(dataOfObject.ToString());
                 }
-            }
-            else
-            {
-                TempData["IsEditMode"] = false;
             }
             TempData.Keep("IsEditMode");
             return View("AddEditCustomer", customer);
