@@ -110,7 +110,6 @@ namespace API_Consume.Controllers
             OrderDetailModel orderDetail = new OrderDetailModel();
             if (OrderDetailID != null)
             {
-                TempData["IsEditMode"] = true;
                 HttpResponseMessage response = await _httpClient.GetAsync
                 ($"{_httpClient.BaseAddress}/OrderDetail/GetOrderDetailByID/{OrderDetailID}");
                 if (response.IsSuccessStatusCode)
@@ -120,10 +119,6 @@ namespace API_Consume.Controllers
                     var dataOfObject = jsonObject.data;
                     orderDetail = JsonConvert.DeserializeObject<OrderDetailModel>(dataOfObject.ToString());
                 }
-            }
-            else
-            {
-                TempData["IsEditMode"] = false;
             }
             TempData.Keep("IsEditMode");
             return View("AddEditOrderDetail", orderDetail);
