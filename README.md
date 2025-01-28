@@ -23,7 +23,7 @@ Key Features
                 .WithMessage("User ID must be greater than 0 and a positive integer.");
          This ensures a valid foreign key value is provided when directly interacting with the API.
          
-      => Client-Side Consumption:
+      Client-Side Consumption:
             In scenarios where a dropdown is used to select foreign key values, this validation is unnecessary in API consumption.
             If a user clicks the "Add" button without selecting a dropdown value, Data Annotations trigger to display required field messages like:
             "The UserID field is required."
