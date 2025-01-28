@@ -16,5 +16,17 @@ Key Features
           FluentValidation: Applies rules for specific fields after basic validation.
       => For fields with default values (0), Data Annotations ensure 0 is treated as invalid and trigger appropriate error messages.
 
+(4) Foreign Key Validation (e.g., UserID):
+      => API-Level Validation:
+            RuleFor(model => model.UserID)
+                .GreaterThan(0)
+                .WithMessage("User ID must be greater than 0 and a positive integer.");
+         This ensures a valid foreign key value is provided when directly interacting with the API.
+         
+      => Client-Side Consumption:
+            In scenarios where a dropdown is used to select foreign key values, this validation is unnecessary in API consumption.
+            If a user clicks the "Add" button without selecting a dropdown value, Data Annotations trigger to display required field messages like:
+            "The UserID field is required."
+
 For more information about using FluentValidation in MVC architecture, visit this website
 https://dotnettutorials.net/lesson/fluent-api-in-asp-net-core-mvc/
